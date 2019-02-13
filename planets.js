@@ -1,0 +1,110 @@
+var planets = [
+    sun = {
+        radius : 80.0,
+        widthS : 20.0,
+        heightS : 20.0,
+        distanceSun : 0.0,
+        angleRotation : 0.0,
+        moon : 0,
+        rings : 0,
+        speed : 0.0,
+        material : "sunmap.jpg",
+        id: "sun"
+    },
+    mercury = {
+        radius : 2.0,
+        widthS : 20.0,
+        heightS : 20.0,
+        distanceSun : 140.0,
+        angleRotation : 0.0,
+        moon : 0,
+        rings : 0,
+        speed : 0.0,
+        material : "mercurymap.jpg",
+        id: "mercury"
+    },
+    venus = {
+        radius : 6.0,
+        widthS : 20.0,
+        heightS : 20.0,
+        distanceSun : 180.0,
+        angleRotation : 0.0,
+        moon : 0,
+        rings : 0,
+        speed : 0.0,
+        material : "venusmap.jpg",
+        id: "venus"
+    },
+    earth = {
+        radius : 6.2,
+        widthS : 20.0,
+        heightS : 20.0,
+        distanceSun : 220.0,
+        angleRotation : 0.0,
+        moon : 1,
+        rings : 0,
+        speed : 0.0,
+        material : "earthmap1k.jpg",
+        id: "earth"
+    },
+    mars = {
+        radius : 3.5,
+        widthS : 20.0,
+        heightS : 20.0,
+        distanceSun : 260.0,
+        angleRotation : 0.0,
+        moon : 0,
+        rings : 0,
+        speed : 0.0,
+        material : "mars_1k_color.jpg",
+        id: "mars"
+    },
+    jupiter = {
+        radius : 34.0,
+        widthS : 20.0,
+        heightS : 20.0,
+        distanceSun : 350.0,
+        angleRotation : 0.0,
+        moon : 0,
+        rings : 0,
+        speed : 0.0,
+        material : "jupitermap.jpg",
+        id: "jupiter"
+    },
+    saturn = {
+        radius : 32.0,
+        widthS : 20.0,
+        heightS : 20.0,
+        distanceSun : 450.0,
+        angleRotation : 0.0,
+        moon : 0,
+        rings : 0,
+        speed : 0.0,
+        material : "saturnmap.jpg",
+        id: "saturn"
+    },
+    uranus = {
+        radius : 10.0,
+        widthS : 20.0,
+        heightS : 20.0,
+        distanceSun : 520.0,
+        angleRotation : 0.0,
+        moon : 0,
+        rings : 0,
+        speed : 0.0,
+        material : "uranusmap.jpg",
+        id: "uranus"
+    },
+    neptune = {
+        radius : 9.0,
+        widthS : 20.0,
+        heightS : 20.0,
+        distanceSun : 580.0,
+        angleRotation : 0.0,
+        moon : 0,
+        rings : 0,
+        speed : 0.0,
+        material : "neptunemap.jpg",
+        id: "neptune"
+    }
+];
