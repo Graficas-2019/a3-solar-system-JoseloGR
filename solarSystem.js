@@ -15,7 +15,8 @@ var renderer = null,
 scene = null, 
 camera = null,
 solarGroup = null,
-orbitControls = null;
+orbitControls = null,
+asteroids = null;
 
 var duration = 30000; // ms
 var currentTime = Date.now();
@@ -39,6 +40,16 @@ function animate() {
         }
         planetsGroup[planets[i]['id']].rotation.y += angle;
         //planetsGroup[planets[i]['id']].rotation.x += angle;
+    }
+
+    if(asteroids.children.length > 0) {
+        asteroids.children.forEach(asteroid => {
+            var fract = deltat / 10000;
+            var angle = Math.PI * 2 * fract;
+            asteroid.rotation.x += angle;
+            asteroid.rotation.y += angle;
+            asteroid.rotation.z += angle;
+        });
     }
     
 }
@@ -94,18 +105,15 @@ function createScene(canvas) {
         createPlanets(planets[i]);
     }
 
+    asteroids = new THREE.Object3D;
+    solarGroup.add(asteroids);
+
+    for(var j=0; j<50; j++) {
+        createAsteroid();
+    }
+
     // Now add the solarGroup to our scene
     scene.add( solarGroup );
-}
-
-function rotateScene(deltax) {
-    solarGroup.rotation.y += deltax / 100;
-    console.log("rotation: 0," + solarGroup.rotation.y.toFixed(2) + ",0");
-}
-
-function scaleScene(scale) {
-    solarGroup.scale.set(scale, scale, scale);
-    console.log("scale: " + scale);
 }
 
 // Create 3D Object with configuration of the planet
@@ -142,4 +150,38 @@ function createAstro(path, radius, width, height) {
     // And put the geometry and material together into a mesh
     var spherePlanet = new THREE.Mesh(geometry, material);
     return spherePlanet;
+}
+
+function createAsteroid() {
+    // instantiate a loader
+    var loader = new THREE.OBJLoader();
+    // load a resource
+    loader.load('models/asteroid.obj',
+        // called when resource is loaded
+        function ( object ) {
+            // calculate position around a radius
+            var angles = randomAround(320);
+            object.position.set(angles[0], 0, angles[1]);
+            object.scale.set(Math.random() * 0.1, Math.random() * 0.1, Math.random() * 0.1);
+            //solarGroup.add( object );
+            asteroids.add(object);
+        },
+        // called when loading is in progresses
+        function ( xhr ) {
+            console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+        },
+        // called when loading has errors
+        function ( error ) {
+            console.log( 'An error happened' );
+        }
+    );
+}
+
+function randomAround(radius) {
+    // get a random angle
+    var angle = Math.random() * Math.PI * 2;
+    var containers = [];
+    containers.push(Math.cos(angle) * radius);
+    containers.push(Math.sin(angle) * radius);
+    return containers;
 }
