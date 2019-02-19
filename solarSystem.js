@@ -32,15 +32,14 @@ function animate() {
     solarGroup.rotation.y += angle;
 
     // Rotate the each planet and moon about its Y axis
-    for(var i=0; i<planets.length; i++) {
-        fract = deltat / planets[i]['speed'];
+    planets.forEach(planet => {
+        fract = deltat / planet['speed'];
         angle = Math.PI * 2 * fract;
-        for(var j=0; j<planetsGroup[planets[i]['id']]['children'].length; j++) {
-            planetsGroup[planets[i]['id']]['children'][j].rotation.y += angle;
-        }
-        planetsGroup[planets[i]['id']].rotation.y += angle;
-        //planetsGroup[planets[i]['id']].rotation.x += angle;
-    }
+        planetsGroup[planet['id']]['children'].forEach(planetGroup => {
+            planetGroup.rotation.y += angle;
+        });
+        planetsGroup[planet['id']].rotation.y += angle;
+    });
 
     if(asteroids.children.length > 0) {
         asteroids.children.forEach(asteroid => {
@@ -101,14 +100,14 @@ function createScene(canvas) {
     solarGroup.add(light);
     //scene.add(light)
 
-    for(var i=0; i<planets.length; i++) {
-        createPlanets(planets[i]);
-    }
+    planets.forEach(planet => {
+        createPlanets(planet);
+    });
 
     asteroids = new THREE.Object3D;
     solarGroup.add(asteroids);
 
-    for(var j=0; j<50; j++) {
+    for(var j=0; j<500; j++) {
         createAsteroid();
     }
 
@@ -131,15 +130,14 @@ function createPlanets(planet) {
     planetsGroup[planet['id']].position.set(planet['distanceSun'], 0, 0);
 
     if(planet['moon'] > 0) {
-        // for(var i=1; i<=planet['moon']; i++) {
-        for(var i=1; i<=1; i++) {
+        for(var i=0; i<planet['moon']; i++) {
             var sphereMoon = createAstro('images/moon_1024.jpg', planet['radiusMoon'], planet['widthSegments'], planet['heightSegments']);
-            sphereMoon.position.set(planet['distancePlanet'], 0, 0);
+            var angles = randomAround(planet['distancePlanet']);
+            sphereMoon.position.set(angles[0], 0, angles[1]);
             sphereMoon.name = `moon_${i}`;
             planetsGroup[planet['id']].add(sphereMoon);
         }
     }
-    // group.add(planetsGroup[planet['id']]);
 }
 
 function createAstro(path, radius, width, height) {
@@ -163,7 +161,6 @@ function createAsteroid() {
             var angles = randomAround(320);
             object.position.set(angles[0], 0, angles[1]);
             object.scale.set(Math.random() * 0.1, Math.random() * 0.1, Math.random() * 0.1);
-            //solarGroup.add( object );
             asteroids.add(object);
         },
         // called when loading is in progresses
