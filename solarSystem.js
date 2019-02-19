@@ -108,7 +108,7 @@ function createScene(canvas) {
     asteroids = new THREE.Object3D;
     solarGroup.add(asteroids);
 
-    for(var j=0; j<10; j++) {
+    for(var j=0; j<100; j++) {
         createAsteroid();
     }
 
@@ -140,6 +140,14 @@ function createPlanets(planet) {
             sphereMoon.name = `moon_${i}`;
             planetsGroup[planet['id']].add(sphereMoon);
         }
+    }
+
+    if(planet['rings'] > 0) {
+        var geometry = new THREE.RingGeometry(planet['radius']+5, planet['radius']+10, 40 );
+        var texture = new THREE.TextureLoader().load(`images/${planet['ringMaterial']}`);
+        var material = new THREE.MeshPhongMaterial( { map: texture, side: THREE.DoubleSide });
+        var ring = new THREE.Mesh(geometry, material);
+        planetsGroup[planet['id']].add(ring);
     }
 }
 
