@@ -38,6 +38,7 @@ function animate() {
         planetsGroup[planet['id']]['children'].forEach(planetGroup => {
             planetGroup.rotation.y += angle;
         });
+        // Rotate the each group planet about its Y axis
         planetsGroup[planet['id']].rotation.y += angle;
     });
 
@@ -151,6 +152,7 @@ function createPlanets(planet) {
     }
 }
 
+// Create 3D Object with configuration of any sphere astro
 function createAstro(path, pathBump, radius, width, height) {
     var texture = new THREE.TextureLoader().load(`images/${path}`);
     var textureBump = null;
@@ -169,6 +171,7 @@ function createAstro(path, pathBump, radius, width, height) {
     return spherePlanet;
 }
 
+// Create 3D Object with configuration of the asteroid
 function createAsteroid() {
     // instantiate a loader
     var loader = new THREE.OBJLoader();
@@ -193,6 +196,7 @@ function createAsteroid() {
     );
 }
 
+// Generate random angles
 function randomAround(radius) {
     // get a random angle
     var angle = Math.random() * Math.PI * 2;
@@ -202,6 +206,7 @@ function randomAround(radius) {
     return containers;
 }
 
+// Create the orbit for each planet
 function createOrbit(planet) {
     var curve = new THREE.EllipseCurve(
         0,  0,                                         // ax, aY
