@@ -14,7 +14,8 @@ var planetsGroup = {
 var renderer = null, 
 scene = null, 
 camera = null,
-solarGroup = null;
+solarGroup = null,
+orbitControls = null;
 
 var duration = 30000; // ms
 var currentTime = Date.now();
@@ -50,6 +51,9 @@ function run() {
 
     // Spin the cube for next frame
     animate();
+
+    // Update the camera controller
+    orbitControls.update();
 }
 
 function createScene(canvas) {    
@@ -68,6 +72,9 @@ function createScene(canvas) {
     camera = new THREE.PerspectiveCamera( 45, canvas.width / canvas.height, 1, 4000 );
     camera.position.z = 900; //900
     scene.add(camera);
+
+    // element that is included in the camera to indicate the point of focus where it will rotate
+    orbitControls = new THREE.OrbitControls(camera, renderer.domElement); 
     
     // Create a group to hold all the objects
     solarGroup = new THREE.Object3D;
