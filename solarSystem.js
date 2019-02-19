@@ -80,7 +80,7 @@ function createScene(canvas) {
 
     // Add  a camera so we can view the scene
     camera = new THREE.PerspectiveCamera( 45, canvas.width / canvas.height, 1, 4000 );
-    camera.position.z = 900; //900
+    camera.position.z = 900;
     scene.add(camera);
 
     // element that is included in the camera to indicate the point of focus where it will rotate
@@ -93,21 +93,22 @@ function createScene(canvas) {
     var light = new THREE.DirectionalLight( 0xffffff, 1);
 
     // Position the light out from the scene, pointing at the origin
-    light.position.set(.5, 0, 1);
+    light.position.set(140, 0, 0);
     solarGroup.add( light );
 
-    light = new THREE.AmbientLight ( 0xaaccbb, 0.3 );
+    light = new THREE.AmbientLight( 0xffef53, 0.4 );
     solarGroup.add(light);
     //scene.add(light)
 
     planets.forEach(planet => {
         createPlanets(planet);
+        createOrbit(planet);
     });
 
     asteroids = new THREE.Object3D;
     solarGroup.add(asteroids);
 
-    for(var j=0; j<500; j++) {
+    for(var j=0; j<10; j++) {
         createAsteroid();
     }
 
@@ -123,15 +124,17 @@ function createPlanets(planet) {
     
     solarGroup.add(planetsGroup[planet['id']]);
 
-    var spherePlanet = createAstro(`images/${planet['material']}`, planet['radius'], planet['widthSegments'], planet['heightSegments'] );
+    var spherePlanet = createAstro(planet['material'], planet['bump'], planet['radius'], planet['widthSegments'], planet['heightSegments'] );
     spherePlanet.name = planet['id'];
+    spherePlanet.rotation.x = planet['angleRotation'];
 
     planetsGroup[planet['id']].add(spherePlanet);
-    planetsGroup[planet['id']].position.set(planet['distanceSun'], 0, 0);
+    var angles = randomAround(planet['distanceSun']);
+    planetsGroup[planet['id']].position.set(angles[0], 0, angles[1]);
 
     if(planet['moon'] > 0) {
         for(var i=0; i<planet['moon']; i++) {
-            var sphereMoon = createAstro('images/moon_1024.jpg', planet['radiusMoon'], planet['widthSegments'], planet['heightSegments']);
+            var sphereMoon = createAstro('moon_1024.jpg', '', planet['radiusMoon'], planet['widthSegments'], planet['heightSegments']);
             var angles = randomAround(planet['distancePlanet']);
             sphereMoon.position.set(angles[0], 0, angles[1]);
             sphereMoon.name = `moon_${i}`;
@@ -140,9 +143,17 @@ function createPlanets(planet) {
     }
 }
 
-function createAstro(path, radius, width, height) {
-    var texture = new THREE.TextureLoader().load(path);
-    var material = new THREE.MeshPhongMaterial({ map: texture });
+function createAstro(path, pathBump, radius, width, height) {
+    var texture = new THREE.TextureLoader().load(`images/${path}`);
+    var textureBump = null;
+    var material = null;
+    
+    if(!!pathBump) {
+        textureBump = new THREE.TextureLoader().load(`images/${pathBump}`);
+        material = new THREE.MeshPhongMaterial({ map: texture, bumpMap: textureBump, bumpScale: 0.1 });
+    }else {
+        material = new THREE.MeshPhongMaterial({ map: texture });
+    }
     // Create the sphere geometry
     var geometry = new THREE.SphereGeometry(radius, width, height);
     // And put the geometry and material together into a mesh
@@ -181,4 +192,21 @@ function randomAround(radius) {
     containers.push(Math.cos(angle) * radius);
     containers.push(Math.sin(angle) * radius);
     return containers;
+}
+
+function createOrbit(planet) {
+    var curve = new THREE.EllipseCurve(
+        0,  0,                                         // ax, aY
+        planet['distanceSun'], planet['distanceSun'],  // xRadius, yRadius
+        0,  2 * Math.PI,                               // aStartAngle, aEndAngle
+        true,                                          // aClockwise
+        0                                              // aRotation
+    );
+    var points = curve.getPoints( 100 );
+    var geometry = new THREE.BufferGeometry().setFromPoints( points );
+    var material = new THREE.LineBasicMaterial( { color : 0xffffff } );
+    // Create the object to add to the scene
+    var ellipse = new THREE.Line( geometry, material );
+    ellipse.rotation.x = Math.PI / 2;
+    solarGroup.add(ellipse);
 }
