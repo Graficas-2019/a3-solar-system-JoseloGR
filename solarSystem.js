@@ -80,12 +80,14 @@ function createScene(canvas) {
     scene.background = new THREE.Color( 0.2, 0.2, 0.2 );
 
     // Add  a camera so we can view the scene
-    camera = new THREE.PerspectiveCamera( 45, canvas.width / canvas.height, 1, 4000 );
+    camera = new THREE.PerspectiveCamera( 45, canvas.width / canvas.height, 1, 15000 );
     camera.position.z = 900;
     scene.add(camera);
 
     // element that is included in the camera to indicate the point of focus where it will rotate
     orbitControls = new THREE.OrbitControls(camera, renderer.domElement); 
+
+    createSkybox();
     
     // Create a group to hold all the objects
     solarGroup = new THREE.Object3D;
@@ -109,7 +111,7 @@ function createScene(canvas) {
     asteroids = new THREE.Object3D;
     solarGroup.add(asteroids);
 
-    for(var j=0; j<100; j++) {
+    for(var j=0; j<50; j++) {
         createAsteroid();
     }
 
@@ -222,4 +224,39 @@ function createOrbit(planet) {
     var ellipse = new THREE.Line( geometry, material );
     ellipse.rotation.x = Math.PI / 2;
     solarGroup.add(ellipse);
+}
+
+function createSkybox() {
+    var skyboxGeometry = new THREE.CubeGeometry(10000, 10000, 10000);
+    var skyboxMaterials = [
+        new THREE.MeshBasicMaterial({
+            map: new THREE.TextureLoader().load('images/cwd_bk.jpg'),
+            side: THREE.DoubleSide
+        }),
+        new THREE.MeshBasicMaterial({
+            map: new THREE.TextureLoader().load('images/cwd_bk.jpg'),
+            side: THREE.DoubleSide
+        }),
+        new THREE.MeshBasicMaterial({
+            map: new THREE.TextureLoader().load('images/cwd_up.jpg'),
+            side: THREE.DoubleSide
+        }),
+        new THREE.MeshBasicMaterial({
+            map: new THREE.TextureLoader().load('images/cwd_dn.jpg'),
+            side: THREE.DoubleSide
+        }),
+        new THREE.MeshBasicMaterial({
+            map: new THREE.TextureLoader().load('images/cwd_rt.jpg'),
+            side: THREE.DoubleSide
+        }),
+        new THREE.MeshBasicMaterial({
+            map: new THREE.TextureLoader().load('images/cwd_lf.jpg'),
+            side: THREE.DoubleSide
+        })
+    ];
+
+    var skyboxMaterial = new THREE.MeshFaceMaterial(skyboxMaterials);
+    var skybox = new THREE.Mesh(skyboxGeometry, skyboxMaterial);
+    skybox.position.set(0, 0, 0);
+    scene.add(skybox);
 }
